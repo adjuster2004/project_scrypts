@@ -1,0 +1,30 @@
+ansible-hyperconverged/
+├── ansible.cfg
+├── inventory.yml
+├── group_vars/
+│   └── all.yml
+├── requirements.yml
+├── site.yml
+├── roles/
+│   ├── common/
+│   │   └── tasks/main.yml
+│   ├── proxmox/
+│   │   ├── tasks/main.yml
+│   │   ├── tasks/install.yml
+│   │   ├── tasks/network.yml
+│   │   ├── tasks/cluster.yml
+│   │   └── templates/interfaces.j2
+│   ├── linstor/
+│   │   ├── tasks/main.yml
+│   │   ├── tasks/install.yml
+│   │   ├── tasks/controller.yml
+│   │   ├── tasks/storage_pools.yml
+│   │   └── tasks/ha.yml
+│   ├── k8s_infra/               <-- Создание ВМ в Proxmox
+│   │   └── tasks/main.yml
+│   ├── k8s_setup/               <-- Настройка внутри ВМ
+│   │   └── tasks/main.yml
+│   └── monitoring/
+│       ├── tasks/main.yml
+│       ├── tasks/prometheus.yml
+│       └── tasks/linstor_exporter.yml

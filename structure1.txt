@@ -1,0 +1,21 @@
+# === Директории ===
+# Чтобы указать, что это папка, обязательно ставь слеш "/" в конце
+src/app/
+src/pages/
+src/features/email/components/
+src/features/calendar/components/
+src/features/server-filters/components/
+src/shared/
+
+# === Файлы ===
+# Формат: путь/к/файлу | содержимое (символы \n будут преобразованы в переносы строк)
+index.html | \n
+vite.config.ts | // Конфиг сборщика\n
+Dockerfile | # Сборка Nginx образа для порта 443\n
+src/main.tsx | // Рендер приложения\n
+src/pages/InboxPage.tsx | // Страница входящих писем\n
+src/pages/CalendarPage.tsx | // Страница календаря (наш фокус!)\n
+src/pages/SettingsPage.tsx | // Настройки пользователя\n
+src/features/email/store.ts | // Состояние (выбранные письма, кэш)\n
+src/features/calendar/utils.ts | // Парсер iCal/ICS\n
+src/features/server-filters/api.ts | // Отправка JSON-правил на бэкенд HopeDB\n
