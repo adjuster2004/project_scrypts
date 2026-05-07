@@ -15,12 +15,13 @@ def process_flat_format(lines: list[str], base_path: Path):
     print("⚙️ Режим парсинга: ПЛОСКИЙ СПИСОК (Paths + Content)\n")
     for line in lines:
         line = line.strip()
-        # Игнорируем пустые строки и комментарии
+        # Игнорируем пустые строки и комментарии с начала строки
         if not line or line.startswith("#"):
             continue
 
         parts = line.split("|", 1)
-        item_path_str = parts[0].strip()
+        # Отсекаем инлайн-комментарии от пути
+        item_path_str = parts[0].split("#")[0].strip()
         content = parts[1].strip().replace("\\n", "\n") if len(parts) > 1 else ""
 
         full_path = base_path / item_path_str
@@ -42,13 +43,15 @@ def process_tree_format(lines: list[str], base_path: Path):
     for line_num, line in enumerate(lines, 1):
         original_line = line.rstrip('\n')
         
-        # Очистка от мусора и комментариев <--
-        line_clean = re.sub(r'\\s*', '', original_line)
-        if "<--" in line_clean:
-            line_clean = line_clean.split("<--")[0]
+        # Очистка от мусора вроде <--
+        if "<--" in original_line:
+            original_line = original_line.split("<--")[0]
         
-        # Пропускаем пустые строки и комментарии #
-        if not line_clean.strip() or line_clean.strip().startswith("#"):
+        # Жестко отсекаем инлайн-комментарии (все, что после '#')
+        line_clean = original_line.split("#")[0].rstrip()
+        
+        # Пропускаем пустые строки
+        if not line_clean.strip():
             continue
 
         # Вычисляем уровень вложенности
@@ -94,13 +97,16 @@ def create_project_structure(config_file: str, base_dir: str):
     with open(structure_path, "r", encoding="utf-8") as f:
         lines = f.readlines()
 
+    # Очистка от тегов , если они случайно попали в текст
+    clean_lines = [re.sub(r'\\s*', '', line) for line in lines]
+
     # Автоопределение формата и запуск нужного обработчика
-    file_format = detect_format(lines)
+    file_format = detect_format(clean_lines)
     
     if file_format == 'tree':
-        process_tree_format(lines, base_path)
+        process_tree_format(clean_lines, base_path)
     else:
-        process_flat_format(lines, base_path)
+        process_flat_format(clean_lines, base_path)
 
     print("\n✅ Структура успешно сгенерирована!")
 
